@@ -10,10 +10,10 @@ export class UserRepository implements IUserRepository {
     this.client = pgClient();
   }
 
-  async create({ email, password, id, resetToken, resetTokenExpiration, salt }: User): Promise<User> {
+  async create({ email, password, salt, name }: User): Promise<User> {
     const user = await this.client.query(
-      `INSERT INTO users (id, email,password,resetToken,resetTokenExpiration,salt) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
-      [id, email, password, resetToken, resetTokenExpiration, salt]
+      `INSERT INTO users ( email,password,salt,name) VALUES ($1,$2,$3,$4) RETURNING *`,
+      [email, password, salt, name]
     );
     return user.rows[0];
   }
@@ -24,11 +24,11 @@ export class UserRepository implements IUserRepository {
     );
     return user.rows[0];
   }
-  async findById(userId: string): Promise<User> {
+  async findByEmail(email: string): Promise<User> {
 
     const users = await this.client.query(
-      `SELECT * FROM Users WHERE id = $1`,
-      [userId]
+      `SELECT * FROM users WHERE email = $1`,
+      [email]
     );
     return users.rows[0];
   }

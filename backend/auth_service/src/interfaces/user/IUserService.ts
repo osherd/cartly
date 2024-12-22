@@ -1,9 +1,8 @@
-import { User } from '../../entities/User';
-
 export interface IUserService {
-  createUser(userData: User): any;
+  createUser(userData: any): any;
   getUsers(limit: number, offset: number): any;
-  getUserById(id: string): any;
+  getUser(email: string): any;
   deleteUserById(id: string): any;
   updateUser(id: number, data: any): any;
 }
+

@@ -18,11 +18,11 @@ export class UserService implements IUserService {
 
     return this.repository.find(limit, offset)
   }
-  getUserById(userId: string) {
-    return this.repository.findById(userId)
+  getUser(userId: string) {
+    return this.repository.findByEmail(userId)
   }
   getUserByEmail(email: string) {
-    return this.repository.findById(email)
+    return this.repository.findByEmail(email)
   }
   deleteUserById(userId: string) {
     return this.repository.delete(userId)
