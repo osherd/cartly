@@ -34,7 +34,8 @@ export const GenerateSignature = async (payload: any) => {
 };
 
 export const ValidateSignature = async (req: Request) => {
-  const token = req.get('Authorization');
+  const token = req.header('authorization');
+  // const token = req.get('Authorization');
 
   if (token) {
     try {

@@ -13,8 +13,8 @@ import {
   SET_NAME,
   SET_USER,
 } from '../../redux/store/features/auth/authSlice.js';
-import PasswordInput from '../../components/passwordInput/PasswordInput.js';
-import Loader from '../../components/loader/Loader.js';
+import Loader from '../../components/loader/Loader.tsx';
+import PasswordInput from '../../components/passwordInput/PasswordInput.tsx';
 const initialState = {
   email: '',
   password: '',

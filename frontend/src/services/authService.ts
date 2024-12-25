@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
-const BACKEND_URL = 'http://localhost:4000'; //process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = 'http://localhost:5000'; //process.env.BASE_APP_BACKEND_URL;
 export const API_URL = `${BACKEND_URL}/auth/users/`;
 
 // Validate email
@@ -56,7 +56,7 @@ interface LoginResponse {
 
 export const login = async (userData: LoginData): Promise<unknown> => {
   try {
-    const response: LoginResponse = await axios.post(API_URL + "login", userData);
+    const response: LoginResponse = await axios.post(`${API_URL}/login`, userData);
     return response.data;
   } catch (error: unknown) {
     const err = error as AxiosError;
