@@ -3,7 +3,7 @@ import express from "express";
 import { UserRepository } from '../repositories/userRepository'
 import { UserService } from '../services/user.service';
 import { UserController } from '../controllers/UserController';
-import { Authenticate } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 
 const router = express.Router();
 const repository = new UserRepository()
@@ -18,7 +18,7 @@ router.post('/auth/users/signup', controller.onUserSignup.bind(controller))
 router.post('/auth/users/login', controller.onUserLogin.bind(controller));
 
 //Authentication
-router.use(Authenticate);
+router.use(authenticate);
 
 router.get('/auth/users', controller.onGetUsers.bind(controller));
 router.get('/auth/users/:id', controller.onGetUserById.bind(controller));

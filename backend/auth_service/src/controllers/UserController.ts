@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 import { IUserService } from '../interfaces/user/IUserService';
-import { GeneratePassword, GenerateSalt, GenerateSignature, ValidatePassword } from '../utils/password';
+import { generatePassword, generateSalt, generateSignature, validatePassword } from '../utils/password';
 
 export class UserController {
   private interactor: IUserService
@@ -15,8 +15,8 @@ export class UserController {
       const userInputs = req.body;
 
       const { password, email, name } = userInputs;
-      const salt = await GenerateSalt();
-      const userPassword = await GeneratePassword(password, salt);
+      const salt = await generateSalt();
+      const userPassword = await generatePassword(password, salt);
       const existingUser = await this.interactor.getUser(email);
 
       if (existingUser) {
@@ -30,7 +30,7 @@ export class UserController {
       const result = await this.interactor.createUser(body);
 
       //Generate the Signature
-      const signature = await GenerateSignature({
+      const signature = await generateSignature({
         id: result.id,
         email: result.email,
       })
@@ -48,10 +48,10 @@ export class UserController {
     try {
       const user = await this.interactor.getUser(email);
       if (user) {
-        const validation = await ValidatePassword(password, user.password, user.salt);
+        const validation = await validatePassword(password, user.password, user.salt);
 
         if (validation) {
-          const signature = await GenerateSignature({
+          const signature = await generateSignature({
             email: user.email,
           })
 
