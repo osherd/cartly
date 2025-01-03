@@ -16,9 +16,6 @@ const authSlice = createSlice({
     SET_LOGIN(state, action) {
       state.isLoggedIn = action.payload;
     },
-    SET_NAME(state, action) {
-      state.user.name = action.payload;
-    },
     SET_USER(state, action) {
       const profile = action.payload;
       state.user.name = profile.name;
@@ -27,7 +24,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { SET_LOGIN, SET_NAME, SET_USER } = authSlice.actions;
+export const { SET_LOGIN, SET_USER } = authSlice.actions;
 
 interface User {
   name: string;

@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
 const BACKEND_URL = 'http://localhost:5000'; //process.env.BASE_APP_BACKEND_URL;
-export const API_URL = `${BACKEND_URL}/auth/users/`;
+export const API_URL = `${BACKEND_URL}/auth/users`;
 
 // Validate email
 export const validateEmail = (email: string): boolean => {
@@ -71,7 +71,7 @@ export const login = async (userData: LoginData): Promise<unknown> => {
 // Logout User
 export const logoutUser = async () => {
   try {
-    await axios.get(API_URL + "logout");
+    await axios.get(`{API_URL}/logout`);
   } catch (error) {
     const err = error as AxiosError;
     const message =

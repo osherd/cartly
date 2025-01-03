@@ -7,9 +7,9 @@ services:
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_USER: auth_user
-      POSTGRES_PASSWORD: auth_password
-      POSTGRES_DB: user_db
+      POSTGRES_USER: ${postgres_user}
+      POSTGRES_PASSWORD: ${auth_password}
+      POSTGRES_DB: ${user_db}
     networks:
       - pgnetwork
     restart: always
@@ -20,8 +20,8 @@ services:
     ports:
       - '8888:80'
     environment:
-      PGADMIN_DEFAULT_EMAIL: user@domain.com
-      PGADMIN_DEFAULT_PASSWORD: catsarecool
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     networks:
       - pgnetwork
     depends_on:

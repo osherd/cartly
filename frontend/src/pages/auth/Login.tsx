@@ -10,7 +10,6 @@ import { toast } from 'react-toastify';
 import { login, validateEmail } from '../../services/authService';
 import {
   SET_LOGIN,
-  SET_NAME,
   SET_USER,
 } from '../../redux/store/features/auth/authSlice.js';
 import Loader from '../../components/loader/Loader.tsx';
@@ -53,11 +52,8 @@ const Login = () => {
     setIsLoading(true);
     try {
       const data = (await login(userData)) as LoginResponse;
-      console.log(data);
-      await dispatch(SET_LOGIN(true));
-      await dispatch(SET_NAME(data.name));
-      await dispatch(SET_USER(data.name));
-
+      dispatch(SET_LOGIN(true));
+      dispatch(SET_USER(data));
       navigate('/');
       setIsLoading(false);
     } catch (error) {

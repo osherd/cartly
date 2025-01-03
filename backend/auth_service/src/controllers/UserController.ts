@@ -35,6 +35,14 @@ export class UserController {
         email: result.email,
       })
 
+
+      // Set the token in cookies
+      res.cookie('token', signature, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
       // Send the result
       return res.status(201).json({ signature, email: result.email })
     } catch (error: any) {
@@ -55,10 +63,13 @@ export class UserController {
             email: user.email,
           })
 
+
+          req.headers.authorization = 'Bearer ' + signature;
+
           return res.status(200).json({
             signature,
-            email: user.email,
-            name: user.name
+            name: user.name,
+            email: user.email
           })
         }
       }

@@ -11,11 +11,7 @@ import PasswordInput from '../../components/passwordInput/PasswordInput';
 import { useDispatch } from 'react-redux';
 import { signup, validateEmail } from '../../services/authService';
 import { toast } from 'react-toastify';
-import {
-  SET_LOGIN,
-  SET_NAME,
-  SET_USER,
-} from '../../redux/store/features/auth/authSlice';
+import { SET_LOGIN, SET_USER } from '../../redux/store/features/auth/authSlice';
 import Loader from '../../components/loader/Loader';
 
 const initialState = {
@@ -47,13 +43,13 @@ const Signup = () => {
 
   const checkIcon = <BsCheck2All color='green' size={15} />;
 
-  const switchIcon = (condition) => {
+  const switchIcon = (condition: boolean) => {
     return condition ? checkIcon : timesIcon;
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    const { name, value } = event.target;
+    const { name, value } = e.target;
 
     setFormData({ ...formData, [name]: value });
   };
@@ -85,7 +81,15 @@ const Signup = () => {
     }
   }, [password]);
 
-  const signupUser = async (e) => {
+  // interface SignupResponse {
+  //   // Define the shape of the response from the signup service
+  //   // Example:
+  //   // id: string;
+  //   // name: string;
+  //   // email: string;
+  // }
+
+  const signupUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!name || !email || !password) {
       return toast.error('All fields are required');
@@ -104,13 +108,12 @@ const Signup = () => {
     try {
       const data = await signup(formData);
       await dispatch(SET_LOGIN(true));
-      await dispatch(SET_NAME(data.name));
-      await dispatch(SET_USER(formData));
+      await dispatch(SET_USER(data));
       navigate('/');
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      const message = error.message || error.toString();
+      const message = error instanceof Error ? error.message : String(error);
       toast.error(message);
     }
   };
@@ -146,12 +149,14 @@ const Signup = () => {
               value={password}
               placeholder='Password'
               onChange={handleInputChange}
+              onPaste={(e) => e.preventDefault()}
             />
             <PasswordInput
               name='confirmPassword'
               value={confirmPassword}
               placeholder='Confirm Password'
               onChange={handleInputChange}
+              onPaste={(e) => e.preventDefault()}
             />
             {/* Password Strength */}
             <Card cardClass={styles.group}>

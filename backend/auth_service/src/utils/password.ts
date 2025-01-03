@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt';
-import { Request, Response, NextFunction } from 'express';
+import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 import { APP_SECRET } from '../config/index';
+import dotenv from 'dotenv';
+dotenv.config();
 
 
 declare global {
@@ -26,20 +28,31 @@ export const validatePassword = async (
   savedPassword: string,
   salt: string
 ) => {
-  return (await generatePassword(enteredPassword, salt)) === savedPassword;
+
+  const generatedPassword = await generatePassword(enteredPassword, salt)
+  return generatedPassword === savedPassword;
 };
 
 export const generateSignature = async (payload: any) => {
-  return jwt.sign(payload, APP_SECRET, { expiresIn: '6d' });
+  const secret = process.env.APP_SECRET;
+  if (!secret) {
+    throw new Error('APP_SECRET is not defined');
+  }
+  return jwt.sign(payload, secret, { expiresIn: '6d' });
 };
 
 export const validateSignature = async (req: Request) => {
-  const token = req.header('authorization');
+  // const token = req.header('authorization');
   // const token = req.get('Authorization');
+  const token = req.headers['authorization'];
 
   if (token) {
     try {
-      const payload = await jwt.verify(token.split(' ')[1], APP_SECRET);
+      const secret = process.env.APP_SECRET;
+      if (!secret) {
+        throw new Error('APP_SECRET is not defined');
+      }
+      const payload = jwt.verify(token.split(' ')[1], secret);
       // @ts-ignore
       req.user = payload;
       return true;

@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom';
 import loaderImg from '../../assets/loader.gif';
 
 const Loader = () => {
+  const loaderElement = document.getElementById('loader');
+  if (!loaderElement) return null;
+
   return ReactDOM.createPortal(
     <div className='wrapper'>
       <div className='loader'>
         <img src={loaderImg} alt='Loading...' />
       </div>
     </div>,
-    document.getElementById('loader') as Element
+    loaderElement
   );
 };
 

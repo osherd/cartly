@@ -16,11 +16,18 @@ const initialState = {
 
 const Profile = () => {
   const [profile, setProfile] = useState(initialState);
-  const [profileImage, setProfileImage] = useState(null);
 
-  const { name, email, phone, bio, photo, role, isVerified } = profile;
+  const { name, email, phone, bio, photo } = profile;
   const handleImageChange = () => {};
-  const handleInputChange = () => {};
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setProfile({
+      ...profile,
+      [name]: value,
+    });
+  };
   return (
     <>
       <section>
@@ -79,8 +86,8 @@ const Profile = () => {
                   <label>Bio</label>
                   <textarea
                     name='bio'
-                    cols='30'
-                    rows='10'
+                    cols={30}
+                    rows={10}
                     value={bio}
                     onChange={handleInputChange}
                   ></textarea>
