@@ -3,7 +3,7 @@ import cors from 'cors'
 
 import userRouter from "./routes/userRoutes";
 
-const PORT = process.env.PORT;
+const PORT = process.env.AUTH_SERVICE_PORT;;
 const app = express();
 app.use(express.json());
 app.use(cors());
