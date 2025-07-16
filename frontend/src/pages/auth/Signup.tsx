@@ -81,13 +81,10 @@ const Signup = () => {
     }
   }, [password]);
 
-  // interface SignupResponse {
-  //   // Define the shape of the response from the signup service
-  //   // Example:
-  //   // id: string;
-  //   // name: string;
-  //   // email: string;
-  // }
+  interface SignupResponse {
+    name: string;
+    email: string;
+  }
 
   const signupUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -106,9 +103,10 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const data = await signup(formData);
-      await dispatch(SET_LOGIN(true));
-      await dispatch(SET_USER(data));
+      const data = (await signup(formData)) as SignupResponse;
+      dispatch(SET_LOGIN(true));
+      dispatch(SET_USER(data));
+
       navigate('/');
       setIsLoading(false);
     } catch (error) {

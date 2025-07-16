@@ -1,8 +1,7 @@
 import { Pool } from "pg";
 import { Product } from "../entities/Product";
 import { pgClient } from '../config/db.connection';
-import { IProductRepository } from '../interfaces/IProductRepository';
-
+import { IProductRepository } from '../interfaces/product/IProductRepository';
 
 export class ProductRepository implements IProductRepository {
   private client: Pool;

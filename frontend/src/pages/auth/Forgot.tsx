@@ -9,9 +9,9 @@ const Forgot = () => {
   const [email, setEmail] = useState('');
 
   const handleInputChange = () => {};
-  const loginUser = (e) => {
+  const loginUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setEmail(e.target.value);
+    setEmail((e.target as HTMLFormElement).email.value);
   };
 
   return (

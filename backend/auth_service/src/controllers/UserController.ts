@@ -17,7 +17,7 @@ export class UserController {
       const { password, email, name } = userInputs;
       const salt = await generateSalt();
       const userPassword = await generatePassword(password, salt);
-      const existingUser = await this.interactor.getUser(email);
+      const existingUser = await this.interactor.getUserByEmail(email);
 
       if (existingUser) {
         return res.status(400).json({ message: 'User already exist!' });
@@ -51,12 +51,28 @@ export class UserController {
   }
 
   async onUserLogin(req: Request, res: Response, next: NextFunction) {
+    let validation;
     const userInputs = req.body;
     const { email, password } = userInputs;
     try {
-      const user = await this.interactor.getUser(email);
+      const user = await this.interactor.getUserByEmail(email) as { password?: string; salt?: string; email: string; name?: string };
       if (user) {
-        const validation = await validatePassword(password, user.password, user.salt);
+        if (user.password && user.salt) {
+          validation = await validatePassword(password, user.password, user.salt);
+          if (validation) {
+            const signature = await generateSignature({
+              email: user.email,
+            });
+
+            req.headers.authorization = 'Bearer ' + signature;
+
+            return res.status(200).json({
+              signature,
+              name: user.name,
+              email: user.email
+            });
+          }
+        }
 
         if (validation) {
           const signature = await generateSignature({

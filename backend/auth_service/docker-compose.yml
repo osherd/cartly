@@ -14,33 +14,6 @@ services:
       - pgnetwork
     restart: always
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin-container
-    ports:
-      - '8888:80'
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    networks:
-      - pgnetwork
-    depends_on:
-      - postgres
-    restart: always
-
 networks:
   pgnetwork:
     driver: bridge
-# version: '3.9'
-
-# services:
-#   user_db:
-#     image: postgres:14-alpine
-#     ports:
-#       - 5432:5432
-#     volumes:
-#       - ~/apps/postgres:/var/lib/postgresql/data
-#     environment:
-#       - POSTGRES_PASSWORD=auth_password
-#       - POSTGRES_USER=auth_user
-#       - POSTGRES_DB=user_db

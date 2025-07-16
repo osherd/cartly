@@ -25,7 +25,7 @@ interface ApiResponse {
 
 export const signup = async (userData: UserData): Promise<unknown> => {
   try {
-    const response: ApiResponse = await axios.post(API_URL + "signup", userData);
+    const response: ApiResponse = await axios.post(API_URL + "/signup", userData);
 
     if (response.statusText === "OK") {
       toast.success("User Registered successfully");

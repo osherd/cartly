@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, query } from 'express'
-import { IProductService } from '../interfaces/IProductService'
+import { IProductService } from '../interfaces/product/IProductService'
 
 export class ProductController {
   private interactor: IProductService

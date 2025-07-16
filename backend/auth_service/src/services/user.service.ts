@@ -1,3 +1,4 @@
+import { User } from '../entities/User';
 import { IUserRepository } from '../interfaces/user/IUserRepository';
 import { IUserService } from '../interfaces/user/IUserService';
 
@@ -7,24 +8,26 @@ export class UserService implements IUserService {
   constructor(repository: IUserRepository) {
     this.repository = repository
   }
-  updateUser(id: number, name: string) {
-    return this.repository.update(id, name)
+  async getUser(email: string): Promise<User> {
+    return this.repository.findByEmail(email);
   }
-  async createUser(input: any) {
-
+  async getUserByEmail(email: string): Promise<User> {
+    return this.repository.findByEmail(email)
+  }
+  async createUser(input: User) {
     return this.repository.create(input)
   }
-  getUsers(limit: number, offset: number) {
+  async updateUser(id: number, name: string) {
+    return this.repository.update(id, name)
+  }
+  async getUsers(limit: number, offset: number) {
 
     return this.repository.find(limit, offset)
   }
-  getUser(userId: string) {
-    return this.repository.findByEmail(userId)
-  }
-  getUserByEmail(email: string) {
+  async getUserById(email: string) {
     return this.repository.findByEmail(email)
   }
-  deleteUserById(userId: string) {
-    return this.repository.delete(userId)
+  async deleteUserById(userId: string): Promise<void> {
+    await this.repository.delete(userId)
   }
 }
