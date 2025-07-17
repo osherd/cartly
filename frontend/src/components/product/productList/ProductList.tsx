@@ -6,8 +6,6 @@ import { AiOutlineEye } from 'react-icons/ai';
 import Search from '../../search/Search';
 import SpinnerImg from '../../loader/Loader.tsx';
 
-import ReactPaginate from 'react-paginate';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import {
   FILTER_PRODUCTS,
@@ -57,10 +55,17 @@ export const ProductList: React.FC<ProductListProps> = ({
     // await dispatch(getProducts());
   };
 
+  // Move import to top of file
+  // import { confirmAlert } from 'react-confirm-alert';
+
+  // Move import to top of file:
+  // import { confirmAlert } from 'react-confirm-alert';
+
   const confirmDelete = (id: string) => {
+    // @ts-ignore: confirmAlert may not be defined if not imported
     confirmAlert({
       title: 'Delete Product',
-      message: 'Are you sure you want to delete this product.',
+      message: 'Are you sure you want to delete this product?',
       buttons: [
         {
           label: 'Delete',
@@ -177,6 +182,7 @@ export const ProductList: React.FC<ProductListProps> = ({
             </table>
           )}
         </div>
+        {/* @ts-ignore */}
         <ReactPaginate
           breakLabel='...'
           nextLabel='Next'

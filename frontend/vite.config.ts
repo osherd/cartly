@@ -5,12 +5,18 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000/auth/users',
+    // Use environment variable for dynamic target, and DRY for repeated config
+    proxy: [
+      '/auth/users/login',
+      '/auth/users/logout',
+      '/auth/users/signup',
+    ].reduce<Record<string, object>>((acc, path) => {
+      acc[path] = {
+        target: process.env.VITE_API_URL || 'http://localhost:5000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
-    }
-  }
+        secure: false,
+      };
+      return acc;
+    }, {}),
+  },
 })

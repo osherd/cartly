@@ -263,9 +263,10 @@ export type RootState = ReturnType<typeof store.getState>;
 
 
 
-export const selectIsLoading = (state: RootState) => state.product.isLoading;
-export const selectProduct = (state: RootState) => state.product.product;
-export const selectTotalStoreValue = (state: RootState) => state.product.totalStoreValue;
-export const selectOutOfStock = (state: RootState) => state.product.outOfStock;
-export const selectCategory = (state: RootState) => state.product.category;
+
+export const selectIsLoading = (state: RootState) => state.product?.isLoading ?? false;
+export const selectProduct = (state: RootState) => state.product?.product ?? null;
+export const selectTotalStoreValue = (state: RootState) => state.product?.totalStoreValue ?? 0;
+export const selectOutOfStock = (state: RootState) => state.product?.outOfStock ?? 0;
+export const selectCategory = (state: RootState) => state.product?.category ?? [];
 export default productSlice.reducer;

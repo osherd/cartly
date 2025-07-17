@@ -17,12 +17,13 @@ const Reset = () => {
 
   const { password, confirmPassword } = resetPassData;
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const { name, value } = e.target;
     setResetPassData({ ...resetPassData, [name]: value });
   };
-  const loginUser = (e) => {
+
+  const loginUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
 
@@ -40,12 +41,14 @@ const Reset = () => {
               value={password}
               placeholder='New Password'
               onChange={handleInputChange}
+              onPaste={(e) => e.preventDefault()}
             />
             <PasswordInput
               name='confirmPassword'
               value={confirmPassword}
               placeholder='Confirm Password'
               onChange={handleInputChange}
+              onPaste={(e) => e.preventDefault()}
             />
             <button type='submit' className='--btn --btn-primary --btn-block'>
               Reset Password

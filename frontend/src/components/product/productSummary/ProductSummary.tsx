@@ -61,7 +61,7 @@ const ProductSummary: React.FC<{ products: Product[] }> = ({ products }) => {
         <InfoBox
           icon={earningIcon}
           title={'Total Store Value'}
-          count={`$${formatNumbers(totalStoreValue.toFixed(2))}  `}
+          count={Number(totalStoreValue.toFixed(2))}
           bgColor='card2'
         />
         <InfoBox

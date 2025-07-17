@@ -50,25 +50,30 @@ interface LoginData {
 }
 
 interface LoginResponse {
-  data: unknown;
+  data: {
+    name: string;
+    email: string;
+    token: string;
+  };
   statusText: string;
 }
 
-export const login = async (userData: LoginData): Promise<unknown> => {
+export const login = async (userData: LoginData): Promise<LoginResponse['data'] | undefined> => {
   try {
-    const response: LoginResponse = await axios.post(`${API_URL}/login`, userData);
+    // Use relative path for Vite proxy
+    const response: LoginResponse = await axios.post('/auth/users/login', userData);
     return response.data;
   } catch (error: unknown) {
     const err = error as AxiosError;
     const message =
-      (err.response && err.response.data && (err.response.data as { message: string }).message) ||
+      (err.response && (err.response.data as { message?: string })?.message) ||
       err.message ||
       err.toString();
     toast.error(message as string);
+    // Return undefined to match the function's return type
+    return undefined;
   }
 };
-
-// Logout User
 export const logoutUser = async () => {
   try {
     await axios.get(`{API_URL}/logout`);

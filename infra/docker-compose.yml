@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # PostgreSQL for auth_service
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres-db-container
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: always
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${PGUSER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
+
+  # Auth service API
+  auth_service:
+    build:
+      context: ../backend/auth_service
+      dockerfile: Dockerfile
+    container_name: auth-service-container
+    ports:
+      - '5000:5000'
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+      LOCAL_CONNECTION_STRING: ${LOCAL_CONNECTION_STRING}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+    restart: always
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '--quiet', 'http://localhost:5000/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
+
+  # Frontend (React + Nginx)
+  cartly:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: cartly-container
+    ports:
+      - '3000:3000'
+    networks:
+      - backend
+    depends_on:
+      - auth_service
+    restart: always
+
+volumes:
+  pgdata:
+
+networks:
+  backend:
+    driver: bridge 

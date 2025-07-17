@@ -18,7 +18,7 @@ const UserList = () => {
                 <h3>All Users</h3>
               </span>
               <span>
-                <Search />
+                <Search value="" onChange={() => {}} />
               </span>
             </div>
             <table>

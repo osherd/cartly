@@ -35,9 +35,7 @@ const Login = () => {
     loggedIn: true,
   };
 
-  interface LoginResponse {
-    name: string;
-  }
+
 
   const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,7 +49,12 @@ const Login = () => {
     }
     setIsLoading(true);
     try {
-      const data = (await login(userData)) as LoginResponse;
+      const data = await login(userData);
+      if (!data) {
+        console.log('Invalid credentials')
+        return toast.error('Invalid credentials');
+       
+      }
       dispatch(SET_LOGIN(true));
       dispatch(SET_USER(data));
       navigate('/');

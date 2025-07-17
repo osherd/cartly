@@ -15,9 +15,12 @@ const ChangePassword = () => {
 
   const { currentPassword, newPassword, confirmNewPassword } = formData;
 
-  const handleInputChange = (e) => {
-    e.preventdefault();
-    setFormData({});
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
   return (
     <>
@@ -36,6 +39,7 @@ const ChangePassword = () => {
                       value={currentPassword}
                       placeholder='Current Password'
                       onChange={handleInputChange}
+                      onPaste={() => {}}
                     />
                   </p>
 
@@ -46,6 +50,7 @@ const ChangePassword = () => {
                       value={newPassword}
                       placeholder='New Password'
                       onChange={handleInputChange}
+                      onPaste={() => {}}
                     />
                   </p>
                   <p>
@@ -55,6 +60,7 @@ const ChangePassword = () => {
                       value={confirmNewPassword}
                       placeholder='Confirm New Password'
                       onChange={handleInputChange}
+                      onPaste={() => {}}
                     />
                   </p>
 

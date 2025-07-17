@@ -1,7 +1,20 @@
 import './InfoBox.scss';
+import React, { ReactNode } from "react";
 
-// eslint-disable-next-line react/prop-types
-const InfoBox = ({ icon, bgColor, title, count }) => {
+interface InfoBoxProps {
+  icon: ReactNode;
+  title: string;
+  count: number;
+}
+
+interface InfoBoxProps {
+  icon: React.ReactNode;
+  bgColor: string;
+  title: string;
+  count: number;
+}
+
+const InfoBox: React.FC<InfoBoxProps> = ({ icon, bgColor, title, count }) => {
   return (
     <div className={`info-box ${bgColor}`}>
       <span className='info-icon --color-white'>{icon}</span>

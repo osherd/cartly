@@ -1,8 +1,12 @@
 import { BiSearch } from 'react-icons/bi';
 import styles from './Search.module.scss';
 
-// eslint-disable-next-line react/prop-types
-const Search = ({ value, onChange }) => {
+interface SearchProps {
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const Search: React.FC<SearchProps> = ({ value, onChange }) => {
   return (
     <div className={styles.search}>
       <BiSearch size={18} className={styles.icon} />

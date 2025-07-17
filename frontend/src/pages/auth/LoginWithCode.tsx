@@ -7,9 +7,9 @@ import styles from './auth.module.scss';
 import { useState } from 'react';
 
 const LoginWithCode = () => {
-  const [loginCode, setLoginCode] = useState('');
+  const [loginCode, setLoginCode] = useState<string>('');
 
-  const loginUser = (e) => {
+  const loginUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
 

@@ -44,53 +44,51 @@ export class UserController {
       });
 
       // Send the result
-      return res.status(201).json({ signature, email: result.email })
+      return res.status(201).json({ signature, email: result.email, name: result.name });
     } catch (error: any) {
       res.status(500).send(error.message)
     }
   }
 
   async onUserLogin(req: Request, res: Response, next: NextFunction) {
-    let validation;
-    const userInputs = req.body;
-    const { email, password } = userInputs;
     try {
-      const user = await this.interactor.getUserByEmail(email) as { password?: string; salt?: string; email: string; name?: string };
-      if (user) {
-        if (user.password && user.salt) {
-          validation = await validatePassword(password, user.password, user.salt);
-          if (validation) {
-            const signature = await generateSignature({
-              email: user.email,
-            });
-
-            req.headers.authorization = 'Bearer ' + signature;
-
-            return res.status(200).json({
-              signature,
-              name: user.name,
-              email: user.email
-            });
-          }
-        }
-
-        if (validation) {
-          const signature = await generateSignature({
-            email: user.email,
-          })
-
-
-          req.headers.authorization = 'Bearer ' + signature;
-
-          return res.status(200).json({
-            signature,
-            name: user.name,
-            email: user.email
-          })
-        }
+      const { email, password } = req.body;
+      // The original code only triggers if BOTH email and password are missing.
+      // To require BOTH fields, we should check if EITHER is missing:
+      if (email == null || email === '' || password == null || password === '') {
+        return res.status(400).json({ message: 'Email and password are required' });
       }
+
+      const user = await this.interactor.getUserByEmail(email) as { password?: string; salt?: string; email: string; name?: string };
+
+      if (!user || !user.password || !user.salt) {
+        return res.status(400).json({ message: 'User not found' });
+      }
+
+      const isValid = await validatePassword(password, user.password, user.salt);
+
+      if (!isValid) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+
+      const signature = await generateSignature({
+        email: user.email,
+      });
+
+      // Set the token in cookies
+      res.cookie('token', signature, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
+      return res.status(200).json({
+        signature,
+        name: user.name,
+        email: user.email
+      });
     } catch (error: any) {
-      res.status(500).send(error.message)
+      return res.status(500).json({ message: error.message || 'Internal server error' });
     }
   }
 
