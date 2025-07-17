@@ -4,7 +4,7 @@ services:
   # PostgreSQL database service
   postgres:
     image: postgres:16-alpine
-    container_name: postgres-container
+    container_name: postgres-db-container
     ports:
       - '5432:5432'
     environment:
@@ -27,7 +27,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: auth_service_container
+    container_name: auth-service-container
     ports:
       - '5000:5000'
     environment:
