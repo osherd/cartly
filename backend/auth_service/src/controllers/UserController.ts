@@ -53,8 +53,7 @@ export class UserController {
   async onUserLogin(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
-      // The original code only triggers if BOTH email and password are missing.
-      // To require BOTH fields, we should check if EITHER is missing:
+    
       if (email == null || email === '' || password == null || password === '') {
         return res.status(400).json({ message: 'Email and password are required' });
       }

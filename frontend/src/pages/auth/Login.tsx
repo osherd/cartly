@@ -16,8 +16,7 @@ import Loader from '../../components/loader/Loader.tsx';
 import PasswordInput from '../../components/passwordInput/PasswordInput.tsx';
 const initialState = {
   email: '',
-  password: '',
-  loggedIn: false,
+  password: ''
 };
 
 const Login = () => {
@@ -29,12 +28,14 @@ const Login = () => {
 
   const { email, password } = formData;
 
-  const userData = {
-    email: email,
-    password: password,
-    loggedIn: true,
-  };
 
+
+
+
+  interface LoginResponse {
+    name: string;
+    email: string;
+  }
 
 
   const loginUser = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,10 +49,13 @@ const Login = () => {
       return toast.error('Please enter a valid email');
     }
     setIsLoading(true);
+    const userData = {
+      email,
+      password
+    };
     try {
-      const data = await login(userData);
+      const data = await login(userData) as LoginResponse;
       if (!data) {
-        console.log('Invalid credentials')
         return toast.error('Invalid credentials');
        
       }

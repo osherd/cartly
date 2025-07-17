@@ -44,14 +44,14 @@ services:
       - backend
     restart: always
     healthcheck:
-      test: ['CMD', 'wget', '--spider', '--quiet', 'http://localhost:5000/health']
+      test:
+        ['CMD', 'wget', '--spider', '--quiet', 'http://localhost:5000/health']
       interval: 10s
       timeout: 5s
       retries: 5
     env_file:
       - .env
 
-  # Frontend (React + Nginx)
   cartly:
     build:
       context: ../frontend
@@ -60,9 +60,26 @@ services:
     ports:
       - '3000:3000'
     networks:
-      - backend
+      - fronend-net
     depends_on:
       - auth_service
+    restart: always
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-container
+    ports:
+      - '80:80'
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ../nginx/logs.txt:/var/log/nginx/access.log
+      - ../nginx/errors.txt:/var/log/nginx/error.log
+    depends_on:
+      - cartly
+      - auth_service
+    networks:
+      - fronend-net
     restart: always
 
 volumes:
@@ -70,4 +87,6 @@ volumes:
 
 networks:
   backend:
-    driver: bridge 
+    driver: bridge
+  fronend-net:
+    driver: bridge

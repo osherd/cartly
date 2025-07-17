@@ -65,6 +65,7 @@ export const login = async (userData: LoginData): Promise<LoginResponse['data'] 
     return response.data;
   } catch (error: unknown) {
     const err = error as AxiosError;
+    // Properly extract error message from AxiosError response
     const message =
       (err.response && (err.response.data as { message?: string })?.message) ||
       err.message ||
