@@ -9,15 +9,19 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Production stage
-FROM node:18-alpine
+# Production stage: use nginx to serve static files
+FROM nginx:alpine
 
-WORKDIR /app
+# Remove default nginx static assets
+RUN rm -rf /usr/share/nginx/html/*
 
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/build ./build
+# Copy built assets from builder (try dist, fallback to build)
+COPY --from=builder /app/dist /usr/share/nginx/html
+# COPY --from=builder /app/build /usr/share/nginx/html # Uncomment if your build output is 'build' instead of 'dist'
 
-EXPOSE 3000
+# Optionally copy a custom nginx config for SPA routing
+COPY nginx.conf /etc/nginx/nginx.conf
 
-CMD ["npm", "start"]
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

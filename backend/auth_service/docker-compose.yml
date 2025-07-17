@@ -1,18 +1,56 @@
 version: '3.8'
 
 services:
+  # PostgreSQL database service
   postgres:
-    image: postgres:latest
+    image: postgres:16-alpine
     container_name: postgres-container
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_USER: ${postgres_user}
-      POSTGRES_PASSWORD: ${auth_password}
-      POSTGRES_DB: ${user_db}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     networks:
       - pgnetwork
     restart: always
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${PGUSER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Auth service API
+  auth_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auth_service_container
+    ports:
+      - '5000:5000'
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+      LOCAL_CONNECTION_STRING: ${LOCAL_CONNECTION_STRING}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pgnetwork
+    restart: always
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '--quiet', 'http://localhost:5000/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
+
+volumes:
+  pgdata:
 
 networks:
   pgnetwork:
