@@ -4,9 +4,9 @@ on:
   push:
     paths:
       - 'frontend/**'
-      - '.github/workflows/frontend-cicd.yml'
+      - '.github/workflows/main.yaml'
       - 'backend/auth_service/**'
-      - '.github/workflows/auth_service-cicd.yml'
+      - '.github/workflows/main.yaml'
   pull_request:
     paths:
       - 'frontend/**'
