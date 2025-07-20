@@ -166,13 +166,13 @@ jobs:
             -e PGUSER=$PGUSER \
             -e PGPASSWORD=$PGPASSWORD \
             -e PGDATABASE=$PGDATABASE \
-            -e LOCAL_CONNECTION_STRING=postgres://$PGUSER:$PGPASSWORD@host.docker.internal:5432/$PGDATABASE \
+            -e LOCAL_CONNECTION_STRING=postgres://$PGUSER:$PGPASSWORD@postgres:5432/$PGDATABASE \
             -p 5000:5000 ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest
 
       - name: Wait for auth-service to be ready
         run: |
-          for i in {1..10}; do
-            if curl -s http://localhost:5000/api/users > /dev/null; then
+          for i in {1..20}; do
+            if curl -s http://localhost:5000/api/health > /dev/null; then
               echo "Auth service is up!" && exit 0
             fi
             echo "Waiting for auth service..."
@@ -180,9 +180,9 @@ jobs:
           done
           echo "Auth service did not start in time" && exit 1
 
-      - name: Test auth-service users endpoint
+      - name: Test auth-service health endpoint
         run: |
-          curl -f http://localhost:5000/api/users || (docker logs auth-service-test && exit 1)
+          curl -f http://localhost:5000/api/health || (docker logs auth-service-test && exit 1)
 
       - name: Stop and remove auth-service container
         run: docker rm -f auth-service-test
