@@ -3,10 +3,10 @@ name: Cartly Monorepo CI/CD
 on:
   push:
     paths:
-      - 'main'
-  pull_request:
-    paths:
-      - 'main.yaml'
+      - 'frontend/**'
+      - '.github/workflows/main.yaml'
+      - 'backend/auth_service/**'
+      - '.github/workflows/main.yaml'
 
 jobs:
   frontend-build:
