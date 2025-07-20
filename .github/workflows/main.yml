@@ -94,3 +94,98 @@ jobs:
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest
+
+  frontend-e2e-test:
+    runs-on: ubuntu-latest
+    needs: frontend-build
+    steps:
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Pull frontend image
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest
+
+      - name: Run frontend container
+        run: docker run -d --name cartly-frontend-test -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest
+
+      - name: Wait for frontend to be ready
+        run: |
+          for i in {1..10}; do
+            if curl -s http://localhost:3000 > /dev/null; then
+              echo "Frontend is up!" && exit 0
+            fi
+            echo "Waiting for frontend..."
+            sleep 3
+          done
+          echo "Frontend did not start in time" && exit 1
+
+      - name: Test frontend root endpoint
+        run: |
+          curl -f http://localhost:3000 || (docker logs cartly-frontend-test && exit 1)
+
+      - name: Stop and remove frontend container
+        run: docker rm -f cartly-frontend-test
+
+  auth-service-e2e-test:
+    runs-on: ubuntu-latest
+    needs: auth-service-build
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U testuser"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    env:
+      PGUSER: testuser
+      PGPASSWORD: testpass
+      PGDATABASE: testdb
+    steps:
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Pull auth-service image
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest
+
+      - name: Run auth-service container
+        run: |
+          docker run -d --name auth-service-test \
+            -e PGUSER=$PGUSER \
+            -e PGPASSWORD=$PGPASSWORD \
+            -e PGDATABASE=$PGDATABASE \
+            -e LOCAL_CONNECTION_STRING=postgres://$PGUSER:$PGPASSWORD@host.docker.internal:5432/$PGDATABASE \
+            -p 5000:5000 ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest
+
+      - name: Wait for auth-service to be ready
+        run: |
+          for i in {1..10}; do
+            if curl -s http://localhost:5000/api/users > /dev/null; then
+              echo "Auth service is up!" && exit 0
+            fi
+            echo "Waiting for auth service..."
+            sleep 3
+          done
+          echo "Auth service did not start in time" && exit 1
+
+      - name: Test auth-service users endpoint
+        run: |
+          curl -f http://localhost:5000/api/users || (docker logs auth-service-test && exit 1)
+
+      - name: Stop and remove auth-service container
+        run: docker rm -f auth-service-test
+
+
+    
