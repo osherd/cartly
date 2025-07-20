@@ -60,7 +60,7 @@ services:
     ports:
       - '3000:3000'
     networks:
-      - fronend-net
+      - frontend-net
     depends_on:
       - auth_service
     restart: always
@@ -79,7 +79,7 @@ services:
       - cartly
       - auth_service
     networks:
-      - fronend-net
+      - frontend-net
     restart: always
 
 volumes:
@@ -88,5 +88,5 @@ volumes:
 networks:
   backend:
     driver: bridge
-  fronend-net:
+  frontend-net:
     driver: bridge

@@ -32,9 +32,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Tag Docker image
-        run: docker tag cartly-frontend:latest ${{secrets.DOCKERHUB_USERNAME}}/cartly-frontend:latest
+        run: docker tag cartly-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest
       - name: Push Docker image
-        run: docker push ${{secrets.DOCKERHUB_USERNAME}}/cartly-frontend:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest
   auth-service-build:
     runs-on: ubuntu-latest
     defaults:
@@ -77,6 +77,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Tag Docker image
-        run: docker tag auth_service:latest yourdockerhubuser/auth_service:latest
+        run: docker tag auth_service:latest ${{ secrets.DOCKERHUB_USERNAME }}/auth_service:latest
       - name: Push Docker image
-        run: docker push yourdockerhubuser/auth_service:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/auth_service:latest
