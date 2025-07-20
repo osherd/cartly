@@ -77,6 +77,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Tag Docker image
-        run: docker tag auth_service:latest ${{ secrets.DOCKERHUB_USERNAME }}/auth_service:latest
+        run: docker tag auth_service:latest ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/auth_service:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest
