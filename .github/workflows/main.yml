@@ -4,9 +4,9 @@ on:
   push:
     paths:
       - 'frontend/**'
-      - '.github/workflows/main.yaml'
+      - '.github/workflows/main.yml'
       - 'backend/auth_service/**'
-      - '.github/workflows/main.yaml'
+      - '.github/workflows/main.yml'
 
 jobs:
   frontend-build:
