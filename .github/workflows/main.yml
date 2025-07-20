@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - 'frontend/**'
-      - '.github/workflows/main.yml'
       - 'backend/auth_service/**'
       - '.github/workflows/main.yml'
 
@@ -22,19 +21,26 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: npm ci
+
       - name: Build
         run: npm run build
+
+      # Optional: Debug DockerHub username
+      # - name: Debug DockerHub username
+      #   run: echo "Username: '${{ secrets.DOCKERHUB_USERNAME }}'"
+
       - name: Build Docker image
-        run: docker build -t cartly-frontend:latest .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest .
+
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Tag Docker image
-        run: docker tag cartly-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest
+
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest
+
   auth-service-build:
     runs-on: ubuntu-latest
     defaults:
@@ -61,22 +67,26 @@ jobs:
       LOCAL_CONNECTION_STRING: postgres://testuser:testpass@localhost:5432/testdb
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
+
       - name: Install dependencies
         run: npm ci
+
       - name: Run tests
         run: npm test
+
       - name: Build Docker image
-        run: docker build -t auth_service:latest .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest .
+
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Tag Docker image
-        run: docker tag auth_service:latest ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest
+
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest
