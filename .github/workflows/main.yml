@@ -32,7 +32,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Tag Docker image
-        run: docker tag cartly-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest
+        run: |
+          if [[ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]]; then
+            echo "Error: DOCKERHUB_USERNAME secret is not set"
+            exit 1
+          fi
+          docker tag cartly-frontend:latest "${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest"
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest
   auth-service-build:
