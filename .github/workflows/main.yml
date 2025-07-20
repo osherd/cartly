@@ -30,13 +30,12 @@ jobs:
         uses: docker/login-action@v2
       #
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Tag Docker image
         run: docker tag cartly-frontend:latest 41526300/cartly-frontend:latest
       - name: Push Docker image
-        # The DockerHub username should be used for the image name to ensure the access token has the correct scope.
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/cartly-frontend:latest
+        run: docker push 41526300/cartly-frontend:latest
   auth-service-build:
     runs-on: ubuntu-latest
     defaults:
