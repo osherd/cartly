@@ -6,5 +6,6 @@ export class User {
     public readonly password: string,
     public readonly id: string,
     public readonly salt?: string,
+    public readonly roles?: string[],
   ) { }
 }

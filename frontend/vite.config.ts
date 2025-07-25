@@ -10,6 +10,7 @@ export default defineConfig({
       '/auth/users/login',
       '/auth/users/logout',
       '/auth/users/signup',
+      '/auth/users/change-password',
     ].reduce<Record<string, object>>((acc, path) => {
       acc[path] = {
         target: process.env.VITE_API_URL || 'http://localhost:5000',

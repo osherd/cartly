@@ -27,8 +27,11 @@ const authSlice = createSlice({
 export const { SET_LOGIN, SET_USER } = authSlice.actions;
 
 interface User {
+  id:number
   name: string;
   email: string;
+  roles:string
+
 }
 
 interface AuthState {

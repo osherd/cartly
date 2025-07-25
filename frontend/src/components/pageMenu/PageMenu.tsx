@@ -9,7 +9,7 @@ const PageMenu = () => {
             <NavLink to='/profile'>Profile</NavLink>
           </li>
           <li>
-            <NavLink to='/changePassword'>Change Password</NavLink>
+            <NavLink to='/change-password'>Change Password</NavLink>
           </li>
           <li>
             <NavLink to='/users'>Users</NavLink>

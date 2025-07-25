@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import e, { Request, Response, NextFunction } from 'express';
 
 import { IUserService } from '../interfaces/user/IUserService';
 import { generatePassword, generateSalt, generateSignature, validatePassword } from '../utils/password';
@@ -53,7 +53,7 @@ export class UserController {
   async onUserLogin(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
-    
+
       if (email == null || email === '' || password == null || password === '') {
         return res.status(400).json({ message: 'Email and password are required' });
       }
@@ -91,6 +91,27 @@ export class UserController {
     }
   }
 
+  // change password
+  async onChangePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+    
+      const { email , newPassword } = req.body;
+      const user = await this.interactor.getUserByEmail(email) 
+
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const salt = await generateSalt();
+      const hashedPassword = await generatePassword(newPassword, salt);
+      const updatedUser = await this.interactor.changePassword(email, hashedPassword, salt);
+
+      return res.status(200).json({ message: 'Password changed successfully', user: updatedUser });
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message || 'Internal server error' });
+    }
+  }
 
   async onGetUserById(req: Request, res: Response, next: NextFunction) {
     try {

@@ -8,6 +8,9 @@ export class UserService implements IUserService {
   constructor(repository: IUserRepository) {
     this.repository = repository
   }
+  async changePassword(userData: any, newPassword: string, salt: string) {
+    return this.repository.changePassword(userData.email, newPassword, salt);
+  }
   async getUser(email: string): Promise<User> {
     return this.repository.findByEmail(email);
   }

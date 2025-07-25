@@ -12,24 +12,46 @@ export class UserRepository implements IUserRepository {
       this.client = await pgClient();
     })();
   }
+  async update(id: number, name: string): Promise<User> {
+    if (!this.client) {
+      throw new Error("Database client is not initialized.");
+    }
 
-  async create({ email, password, salt, name }: User): Promise<User> {
-    if (!this.client) {
-      throw new Error("Database client is not initialized.");
-    }
-    const user = await this.client.query(
-      `INSERT INTO users ( email,password,salt,name) VALUES ($1,$2,$3,$4) RETURNING *`,
-      [email, password, salt, name]
+    const result = await this.client.query(
+      `UPDATE users SET name = $1 WHERE id = $2 RETURNING *`,
+      [name, id]
     );
-    return user.rows[0];
+
+    if (result.rowCount === 0) {
+      throw new Error(`User with id ${id} not found.`);
+    }
+
+    return result.rows[0];
   }
-  async update(userId: number, email: string): Promise<User> {
+
+  async create({ email, password, salt, name, roles }: User): Promise<User> {
+    if (!this.client) {
+      throw new Error("Database client is not initialized.");
+    }
+    try {
+      const user = await this.client.query(
+        `INSERT INTO users ( email,password,salt,name,roles) VALUES ($1,$2,$3,$4,$5) RETURNING *`,
+        [email, password, salt, name, roles]
+      );
+      return user.rows[0];
+    } catch (error: any) {
+      throw new Error(`Error creating user: ${error.message}`);
+
+    }
+  }
+  // change password
+  async changePassword(email: string, newPassword: string, salt: string): Promise<User> {
     if (!this.client) {
       throw new Error("Database client is not initialized.");
     }
     const user = await this.client.query(
-      `UPDATE users SET email=$1 WHERE id=$2 RETURNING *`,
-      [email, userId]
+      `UPDATE users SET password=$1, salt=$2 WHERE email=$3 RETURNING *`,
+      [newPassword, salt, email]
     );
     return user.rows[0];
   }

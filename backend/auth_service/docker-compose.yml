@@ -42,7 +42,8 @@ services:
       - pgnetwork
     restart: always
     healthcheck:
-      test: ['CMD', 'wget', '--spider', '--quiet', 'http://localhost:5000/health']
+      test:
+        ['CMD', 'wget', '--spider', '--quiet', 'http://localhost:5000/health']
       interval: 10s
       timeout: 5s
       retries: 5

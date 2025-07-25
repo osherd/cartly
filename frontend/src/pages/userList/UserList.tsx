@@ -5,7 +5,9 @@ import { FaTrashAlt } from 'react-icons/fa';
 
 import './UserList.scss';
 import ChangeRole from '../../components/changeRole/ChangeRole';
+
 const UserList = () => {
+
   return (
     <section>
       <div className='container'>
@@ -18,7 +20,7 @@ const UserList = () => {
                 <h3>All Users</h3>
               </span>
               <span>
-                <Search value="" onChange={() => {}} />
+                <Search value='' onChange={() => {}} />
               </span>
             </div>
             <table>

@@ -12,7 +12,7 @@ export const pgClient = async (): Promise<Pool> => {
 
     // Use local Docker database if specified
     if (process.env.USE_LOCAL_DB === "true") {
-      connectionString = process.env.local_connection_string;
+      connectionString = process.env.LOCAL_CONNECTION_STRING;
       ssl = false;
     }
 

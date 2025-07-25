@@ -148,14 +148,14 @@ interface ChangePasswordData {
 
 interface ChangePasswordResponse {
   data: {
-    message: string;
+    email: string;
   };
 }
 
-export const changePassword = async (userData: ChangePasswordData): Promise<string> => {
-  const response: ChangePasswordResponse = await axios.patch(API_URL + "changePassword", userData);
+export const changePassword = async (userData: ChangePasswordData): Promise<ChangePasswordResponse['data']> => {
+  const response: ChangePasswordResponse = await axios.patch("auth/users/change-password", userData);
 
-  return response.data.message;
+  return response.data;
 };
 
 // Reset Password
