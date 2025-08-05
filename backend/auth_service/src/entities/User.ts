@@ -1,3 +1,4 @@
+import { Role } from './Role';
 
 export class User {
   constructor(
@@ -6,6 +7,6 @@ export class User {
     public readonly password: string,
     public readonly id: string,
     public readonly salt?: string,
-    public readonly roles?: string[],
+    public readonly roles?: Role[],
   ) { }
 }

@@ -8,6 +8,29 @@ export class ProductController {
     this.interactor = interactor
   }
   async onCreateProduct(req: Request, res: Response): Promise<any> {
+    // check if user logged in
+
+    if (!req.body.userId) {
+      return res.status(400).json({ error: 'User ID is required' })
+    }
+    if (!req.body.id) {
+      return res.status(400).json({ error: 'Product ID is required' })
+    }
+
+    if (!req.body.sku || !req.body.name || !req.body.sellingPrice) {
+      return res.status(400).json({ error: 'Product details are required' })
+    }
+    if (req.body.stockQuantity < 0) {
+      return res.status(400).json({ error: 'Stock quantity cannot be negative' })
+    }
+
+    if (req.body.sellingPrice < 0) {
+      return res.status(400).json({ error: 'Selling price cannot be negative' })
+    }
+
+
+
+
     try {
       const body = req.body
       const data = await this.interactor.createProduct(body)

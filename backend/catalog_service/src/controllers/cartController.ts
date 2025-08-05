@@ -10,7 +10,16 @@ export class CartController {
   async onCartCreate(req: Request, res: Response): Promise<any> {
 
     try {
-      // get product details from catelog service
+
+      // check if user logged in
+      if (!req.body.userId) {
+        return res.status(400).json({ error: 'User not logged in' });
+      }
+      if (!req.body.productId) {
+        return res.status(400).json({ error: 'Product ID is required' });
+      }
+      // get product details from catalog service
+
       const product = await GetProductDetails(req.body.productId)
       console.log(product);
 

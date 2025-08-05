@@ -1,4 +1,4 @@
-import { Product } from '../entities';
+import { Product } from '../entities/Product';
 
 export interface IProductService {
 
