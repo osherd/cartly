@@ -10,7 +10,6 @@ export class CartController {
   async onCartCreate(req: Request, res: Response): Promise<any> {
 
     try {
-
       // check if user logged in
       if (!req.body.userId) {
         return res.status(400).json({ error: 'User not logged in' });
